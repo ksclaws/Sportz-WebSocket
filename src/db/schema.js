@@ -1,27 +1,21 @@
-import { pgTable, serial, text, timestamp, pgEnum, integer, jsonb } from 'drizzle-orm/pg-core';
+import { pgTable, serial, text, integer, timestamp, pgEnum, jsonb } from 'drizzle-orm/pg-core';
 
-// Define the 'demo_users' table
-// export const demoUsers = pgTable('demo_users', {
-//   id: serial('id').primaryKey(),
-//   name: text('name').notNull(),
-//   email: text('email').notNull().unique(),
-//   createdAt: timestamp('created_at').defaultNow().notNull(),
-// });
+// Define status enum: scheduled, live, finished (matching MATCH_STATUS)
+export const matchStatusEnum = pgEnum('match_status', ['scheduled', 'live', 'finished']);
 
-export const matchStatusEnum = pgEnum('match_status', ['Scheduled', 'Live', 'Finished']);
-
+// Define the 'matches' table
 export const matches = pgTable('matches', {
-    id: serial('id').primaryKey(),
-    sport: text('sport').notNull(),
-    homeTeam: text('home_team').notNull(),
-    awayTeam: text('away_team').notNull(),
-    status: matchStatusEnum('status').default('Scheduled').notNull(),
-    startTime: timestamp('start_time').notNull(),
-    endTime: timestamp('end_time'),
-    homeScore: integer('home_score').default(0).notNull(),
-    awayScore: integer('away_score').default(0).notNull(),
-    createdAt: timestamp('created_at').defaultNow().notNull(),
-
+  id: serial('id').primaryKey(),
+  homeTeam: text('home_team').notNull(),
+  awayTeam: text('away_team').notNull(),
+  sport: text('sport').notNull(),
+  startTime: timestamp('start_time').notNull(),
+  endTime: timestamp('end_time').notNull(),
+  status: matchStatusEnum('status').default('scheduled').notNull(),
+  homeScore: integer('home_score').default(0).notNull(),
+  awayScore: integer('away_score').default(0).notNull(),
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+  updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
 export const commentry = pgTable('commentry', {
