@@ -12,7 +12,7 @@ matchRouter.get("/", async (req, res) => {
     const parsed = listMatchesQuerySchema.safeParse(req.query);
 
     if (!parsed.success) {
-        return res.status(400).json({ error: "Invalid Query.", details: JSON.stringify(parsed.error) });
+        return res.status(400).json({ error: "Invalid Query.", details: parsed.error.issues });
     }
 
     const limit = Math.min(parsed.data.limit ?? 10, MAX_LIMIT);
