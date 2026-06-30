@@ -17,21 +17,16 @@ export const matchIdParamSchema = z.object({
   id: z.coerce.number().int().positive(),
 });
 
-// Helper function to check if a string is a valid ISO 8601 date string
-const isIsoDateString = (val) => {
-  const isoRegex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?$/;
-  return isoRegex.test(val) && !isNaN(Date.parse(val));
-};
 
 // 4. createMatchSchema with ISO refinements and chronological superRefine
 export const createMatchSchema = z.object({
   sport: z.string().min(1, 'Sport cannot be empty'),
   homeTeam: z.string().min(1, 'Home team cannot be empty'),
   awayTeam: z.string().min(1, 'Away team cannot be empty'),
-  startTime: z.string().refine(isIsoDateString, {
+  startTime: z.string().refine(z.iso.datetime(), {
     message: 'startTime must be a valid ISO date string (e.g. YYYY-MM-DDTHH:mm:ssZ)',
   }),
-  endTime: z.string().refine(isIsoDateString, {
+  endTime: z.string().refine(z.iso.datetime(), {
     message: 'endTime must be a valid ISO date string (e.g. YYYY-MM-DDTHH:mm:ssZ)',
   }),
   homeScore: z.coerce.number().int().nonnegative().optional(),
